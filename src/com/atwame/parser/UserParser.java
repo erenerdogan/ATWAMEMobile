@@ -3,29 +3,46 @@ package com.atwame.parser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UserParser implements BaseParser {
-	private String json;
+import android.util.Log;
 
-	public UserParser(String json) {
+import com.atwame.model.User;
+import com.atwame.model.UserDao;
+import com.atwame.utils.ModelFactory;
+
+public class UserParser implements BaseParser {
+	
+	private Long userID;
+
+	public UserParser() {
 		super();
-		this.json = json;
+		userID = (long) -1;
 	}
 
 	@Override
-	public Object jsonParser(String json) {
+	public void jsonParser(String json) {
+		Log.w("User Parser", json);
 		try {
 			JSONObject obj = new JSONObject(json);
-			String s = "";
 			if (obj.getBoolean("result") == true) {
-				s = obj.getString("email") + " " + obj.getString("name");
+				UserDao userDao = ModelFactory.getInstance().getDaoSession()
+						.getUserDao();
+				User user = new User();
+				userID = obj.getLong("id");
+				user.setId(userID);
+				user.setEmail(obj.getString("email"));
+				user.setName(obj.getString("name"));
+				
+				userDao.insertOrReplace(user);
+				Log.w("User DB", "User DB ye Eklendi.");
 			}
-			return s;
-
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "";
 	}
 
+	public Long getUserID() {
+		return userID;
+	}
+	
 }

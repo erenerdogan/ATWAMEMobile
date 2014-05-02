@@ -19,146 +19,171 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 
+import com.atwame.parser.BaseParser;
+
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class WebService {
-	private String url;
-	private HashMap<String, String> paramsPair;
-
+	protected String url;
+	protected HashMap<String, String> paramsPair;
+	protected Context context;
+	protected ProgressDialog loadingAlert = null;
+	protected BaseParser parser = null;
+	protected boolean status;
+	private String json;
 	
 	public WebService(String url, HashMap<String, String> params) {
 		super();
 		this.url = url;
-		this.paramsPair =params;
+		this.paramsPair = params;
 	}
-	
-	private String createGetRequest(){
-		HttpClient httpClient=new DefaultHttpClient();
-		 HttpGet httpget = new HttpGet(this.url); 
-		 HttpResponse response;
-		 try {
-			response=httpClient.execute(httpget);
-			HttpEntity entity=response.getEntity();
-			if(entity!=null){
-				InputStream instream=entity.getContent();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(instream));
-		        StringBuilder sb = new StringBuilder();
-		        String line = null;
-		        try {
-		            while ((line = reader.readLine()) != null) {
-		                sb.append(line + "\n");
-		                }
-		        } catch (IOException e) {
-		            e.printStackTrace();
-		        } finally {
-		            try {
-		                instream.close();
-		            } catch (IOException e) {
-		                e.printStackTrace();
-		            }
-		        }
-		        return sb.toString();
+
+	public WebService(Context context, String url, HashMap<String, String> paramsPair) {
+		super();
+		this.url = url;
+		this.paramsPair = paramsPair;
+		this.context = context;
+	}
+
+	final public WebService exec(String method) {
+		try {
+			json = new FetchJSONModel(method).execute().get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return this;
+	}
+
+	public void setProgressDialog(ProgressDialog dialog) {
+		loadingAlert = dialog;
+	}
+
+	public void makeStandardProgressBox() {
+		makeStandardProgressBox("Loading...");
+	}
+
+	public void makeStandardProgressBox(String message) {
+		makeStandardProgressBox("ATWAME", message);
+	}
+
+	public void makeStandardProgressBox(String title, String message) {
+		loadingAlert = new ProgressDialog(context);
+		loadingAlert.setTitle(title);
+		loadingAlert.setMessage(message);
+		loadingAlert.setIndeterminate(true);
+		loadingAlert.show();
+	}
+
+	private String createGetRequest() {
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpGet httpget = new HttpGet(this.url);
+		HttpResponse response;
+		try {
+			response = httpClient.execute(httpget);
+			HttpEntity entity = response.getEntity();
+			if (entity != null) {
+				InputStream instream = entity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(instream));
+				StringBuilder sb = new StringBuilder();
+				String line = null;
+				try {
+					while ((line = reader.readLine()) != null) {
+						sb.append(line + "\n");
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					try {
+						instream.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				return sb.toString();
 			}
 		} catch (Exception e) {
 		}
-		 return "";
-	} 
-	
-	public String callServerGetRequest(){
-		FetchJSONModel json = new FetchJSONModel("GET");
-		
-		try {
-			return json.execute(url).get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return "";
 	}
-	
-	public String callServerPostRequest(){
-		FetchJSONModel json = new FetchJSONModel("POST");
-		
-		try {
-			return json.execute(url).get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return "";
-	}
-	
-	private String createPostRequest(HashMap<String, String> params){
-		
-		HttpClient httpclient = new DefaultHttpClient();
-	    HttpPost httppost = new HttpPost(url);
-	    
-	    try {
-	        // Add your data
-	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-	       
-	        for (String key : params.keySet()){
-	        	nameValuePairs.add(new BasicNameValuePair(key, params.get(key)));
-	        }
-	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-	        // Execute HTTP Post Request
-	        HttpResponse response = httpclient.execute(httppost);
-	        HttpEntity entity=response.getEntity();
-			if(entity!=null){
-				InputStream instream=entity.getContent();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(instream));
-		        StringBuilder sb = new StringBuilder();
-		        String line = null;
-		        try {
-		            while ((line = reader.readLine()) != null) {
-		                sb.append(line + "\n");
-		                }
-		        } catch (IOException e) {
-		            e.printStackTrace();
-		        } finally {
-		            try {
-		                instream.close();
-		            } catch (IOException e) {
-		                e.printStackTrace();
-		            }
-		        }
-		        return sb.toString();
-			}
-	    } catch (ClientProtocolException e) {
-	        // TODO Auto-generated catch block
-	    } catch (IOException e) {
-	        // TODO Auto-generated catch block
-	    }
-	    return "";
-	    		
+	public String callServerRequest() {
+		return json;
 	}
-	
+
+	private String createPostRequest(HashMap<String, String> params) {
+
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpPost httppost = new HttpPost(url);
+
+		try {
+			// Add your data
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+			for (String key : params.keySet()) {
+				nameValuePairs
+						.add(new BasicNameValuePair(key, params.get(key)));
+			}
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+			// Execute HTTP Post Request
+			HttpResponse response = httpclient.execute(httppost);
+			HttpEntity entity = response.getEntity();
+			if (entity != null) {
+				InputStream instream = entity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(instream));
+				StringBuilder sb = new StringBuilder();
+				String line = null;
+				try {
+					while ((line = reader.readLine()) != null) {
+						sb.append(line + "\n");
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					try {
+						instream.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				return sb.toString();
+			}
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+		}
+		return "";
+
+	}
+
 	private class FetchJSONModel extends AsyncTask<String, Void, String> {
 
 		private String method;
+
 		public FetchJSONModel(String method) {
 			this.method = method;
-			
+
 		}
-		
+
 		@Override
 		protected String doInBackground(String... params) {
 			// TODO Auto-generated method stub
 			String json = null;
 			try {
-				String data ="";
-				
-				if(method.equals("POST"))
+				String data = "";
+
+				if (method.equals("POST"))
 					data = createPostRequest(paramsPair);
 				else
 					data = createGetRequest();
@@ -168,6 +193,12 @@ public class WebService {
 				e.printStackTrace();
 			}
 			return json;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			Log.w("onPostExecute", "Alert kapaldı");
+			loadingAlert.dismiss();
 		}
 
 	}

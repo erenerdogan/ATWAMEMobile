@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ScrollView
+        android:id="@+id/svScroll"
+        android:layout_width="match_parent"
+        android:layout_height="-54dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/settingsUserPicture"
+                android:layout_width="100dip"
+                android:layout_height="100dip"
+                android:layout_gravity="center_vertical|center_horizontal" />
+
+            <TextView
+                android:id="@+id/settingsUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="5dip"
+                android:text="Name Surname"
+                android:textColor="#000000"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/settingsEmailTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="5dip"
+                android:text="Email"
+                android:textColor="#000000"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:paddingLeft="5dip"
+                    android:text="Settings"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <CheckBox
+                    android:id="@+id/settingsCheckboGenel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Genel" />
+                
+                <CheckBox
+                    android:id="@+id/settingsCheckboxDuyuru"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Duyuru" />
+                
+                <CheckBox
+                    android:id="@+id/settingsCheckboxEglence"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Eglence" />
+                
+                <CheckBox
+                    android:id="@+id/settingsCheckboxHaber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Haber" />
+                
+                <CheckBox
+                    android:id="@+id/settingsCheckboxKisisel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kişisel" />
+                
+                <CheckBox
+                    android:id="@+id/settingsCheckboxReklam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reklam" />
+                
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/settingsSaveButton"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:text="SAVE" />
+        </LinearLayout>
+    </ScrollView>
+    <!-- Footer aligned to bottom -->
+  <RelativeLayout
+    android:id="@+id/footer"
+    android:layout_width="match_parent"
+    android:layout_height="-54dp"
+    android:layout_alignParentBottom="true"
+    android:gravity="top" >
+  </RelativeLayout>
+
+</RelativeLayout>

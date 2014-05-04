@@ -10,5 +10,9 @@
     <color name="white">#ffffff</color>
 
     <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_wall_me">WallMeActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_post_detail">PostDetailActivity</string>
+    
 
 </resources>

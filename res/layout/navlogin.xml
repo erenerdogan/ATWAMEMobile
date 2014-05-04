@@ -3,7 +3,7 @@
     android:id="@+id/navigationBar"
     android:layout_width="match_parent"
     android:layout_height="54dp"
-    android:layout_marginTop="-54dp"
+    android:layout_marginBottom="-54dp"
     android:background="@color/almostBlack" >
 
     <Button

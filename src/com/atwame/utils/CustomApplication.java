@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.atwame.model.User;
-import com.atwame.service.WebService;
 
 public class CustomApplication extends Application{
 	public final static String BY = "4";
@@ -68,6 +67,7 @@ public class CustomApplication extends Application{
 	}
 	private void initSingletons(){
 		ModelFactory.initInstance(this.getApplicationContext());
+		WebService.initInstance(this, "http://atwame.herokuapp.com");
 		locationManager = (LocationManager)  getSystemService(Context.LOCATION_SERVICE);
 		LocationListener locationListener = new MyLocationListener();  
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0, locationListener);
@@ -80,6 +80,15 @@ public class CustomApplication extends Application{
 		this.APP_FILE_PATH = path;
 	}
 	
+	
+	
+	public WebService getWebService(){
+		return WebserviceInstance;
+	}
+	
+	public void setWebService(WebService WebserviceInstance){
+		this.WebserviceInstance = WebserviceInstance;
+	}
 
 	public void setCurrentUser(long currentUserID) {
 		SharedPreferences ps = getSharedPreferences(SHARED_PREFS, 0);

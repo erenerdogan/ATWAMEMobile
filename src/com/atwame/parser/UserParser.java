@@ -3,46 +3,36 @@ package com.atwame.parser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.atwame.model.User;
 import com.atwame.model.UserDao;
 import com.atwame.utils.ModelFactory;
+import com.atwame.utils.ServerCom;
 
-public class UserParser implements BaseParser {
-	
-	private Long userID;
+public class UserParser extends BaseParser {
 
-	public UserParser() {
-		super();
-		userID = (long) -1;
+	public User user;
+
+	public UserParser(Context context, ServerCom.ErrorHandler errorHandler) {
+		super(context, errorHandler);
 	}
 
-	@Override
-	public void jsonParser(String json) {
+	public UserParser(Context context) {
+		super(context, null);
+	}
+
+	public void parseResponse(String json) {
 		Log.w("User Parser", json);
 		try {
 			JSONObject obj = new JSONObject(json);
-			if (obj.getBoolean("result") == true) {
-				UserDao userDao = ModelFactory.getInstance().getDaoSession()
-						.getUserDao();
-				User user = new User();
-				userID = obj.getLong("id");
-				user.setId(userID);
-				user.setEmail(obj.getString("email"));
-				user.setName(obj.getString("name"));
-				
-				userDao.insertOrReplace(user);
-				Log.w("User DB", "User DB ye Eklendi.");
-			}
+			user = new User();
+			user.setId(obj.getLong("id"));
+			user.setEmail(obj.getString("email"));
+			user.setName(obj.getString("name"));
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
-	public Long getUserID() {
-		return userID;
-	}
-	
 }

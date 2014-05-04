@@ -109,7 +109,7 @@ public class HomeListAdapter extends BaseAdapter {
 				holder.contentLike.setOnClickListener(new loveListener(menu));
 			}
 		} catch (NullPointerException e) {
-			holder.contentLike.setImageResource(R.drawable.love);
+			holder.contentLike.setImageResource(R.drawable.like);
 			holder.contentLike.setOnClickListener(new loveListener(menu));
 		}
 
@@ -180,8 +180,8 @@ public class HomeListAdapter extends BaseAdapter {
 
 		@Override
 		public void onClick(View v) {
-			Toast.makeText(context, "Butona Tıklandı", Toast.LENGTH_LONG)
-					.show();
+			// Toast.makeText(context, "Butona Tıklandı", Toast.LENGTH_LONG)
+			// .show();
 			myAlert = new AlertDialog.Builder(context).create();
 			myAlert.setTitle("Report It");
 			myAlert.setIcon(R.drawable.ic_menu_edit);

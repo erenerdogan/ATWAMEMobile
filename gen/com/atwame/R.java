@@ -953,12 +953,12 @@ containing a value of this type.
         public static final int ContentReportIt=0x7f05005b;
         public static final int ContentUserName=0x7f050058;
         public static final int ContentUserPicture=0x7f050057;
+        public static final int DetailCommentImageButton=0x7f050039;
         public static final int DetailMessage=0x7f050036;
         public static final int DetailMessageImage=0x7f050037;
         public static final int DetailUserName=0x7f050035;
         public static final int DetailUserPicture=0x7f050034;
         public static final int DetailcommentTxt=0x7f050038;
-        public static final int DetailcommentimageView1=0x7f050039;
         public static final int abs__action_bar=0x7f050022;
         public static final int abs__action_bar_container=0x7f050021;
         public static final int abs__action_bar_subtitle=0x7f050011;
@@ -1009,9 +1009,9 @@ containing a value of this type.
         public static final int customReportEditText=0x7f050056;
         public static final int disableHome=0x7f050009;
         public static final int edit_query=0x7f050027;
-        public static final int footer=0x7f05003c;
+        public static final int footer=0x7f05003b;
         public static final int homeAsUp=0x7f050006;
-        public static final int homeListView=0x7f05003b;
+        public static final int homeListView=0x7f05003c;
         public static final int listMode=0x7f050002;
         public static final int loginbtnSignin=0x7f05003f;
         public static final int loginemailTxt=0x7f05003d;
@@ -1077,19 +1077,18 @@ containing a value of this type.
         public static final int activity_detail=0x7f030017;
         public static final int activity_home=0x7f030018;
         public static final int activity_main=0x7f030019;
-        public static final int activity_post_detail=0x7f03001a;
-        public static final int activity_register=0x7f03001b;
-        public static final int activity_settings=0x7f03001c;
-        public static final int activity_wall_me=0x7f03001d;
-        public static final int detail_list_row=0x7f03001e;
-        public static final int dialog_custom_alert=0x7f03001f;
-        public static final int dialog_report_it_alert=0x7f030020;
-        public static final int home_list_row=0x7f030021;
-        public static final int navhome=0x7f030022;
-        public static final int navlogin=0x7f030023;
-        public static final int sherlock_spinner_dropdown_item=0x7f030024;
-        public static final int sherlock_spinner_item=0x7f030025;
-        public static final int simple_spinner_item=0x7f030026;
+        public static final int activity_register=0x7f03001a;
+        public static final int activity_settings=0x7f03001b;
+        public static final int activity_wall_me=0x7f03001c;
+        public static final int detail_list_row=0x7f03001d;
+        public static final int dialog_custom_alert=0x7f03001e;
+        public static final int dialog_report_it_alert=0x7f03001f;
+        public static final int home_list_row=0x7f030020;
+        public static final int navhome=0x7f030021;
+        public static final int navlogin=0x7f030022;
+        public static final int sherlock_spinner_dropdown_item=0x7f030023;
+        public static final int sherlock_spinner_item=0x7f030024;
+        public static final int simple_spinner_item=0x7f030025;
     }
     public static final class menu {
         public static final int home=0x7f0c0000;

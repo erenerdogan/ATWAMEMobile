@@ -3,18 +3,17 @@ package com.atwame;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -22,7 +21,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -30,8 +28,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.atwame.model.Content;
 import com.atwame.model.ContentDao;
-import com.atwame.model.User;
-import com.atwame.model.UserDao;
 import com.atwame.service.ContentService;
 import com.atwame.service.ShareService;
 import com.atwame.utils.CategoryEnum;
@@ -58,7 +54,7 @@ public class HomeActivity extends SherlockActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-
+		
 		listView = (ListView) findViewById(R.id.homeListView);
 		flag = 1;
 		application = (CustomApplication) getApplication();
@@ -67,16 +63,41 @@ public class HomeActivity extends SherlockActivity implements
 		inflater = this.getLayoutInflater();
 		displayContent();
 	}
+	private ArrayList<Content> calculateDistance(ArrayList<Content> arrayList){
+		ArrayList<Content> array = new ArrayList<Content>();
+		double lat = application.getPosLati();
+		double lng = application.getPosLong();
+		double distance = application.distance;
+		Location locationA = new Location("myLocation");
+		locationA.setLatitude(lat);
+		locationA.setLongitude(lng);
+		Log.w("MyLocation","" + lat + " " + lng);
+		for (Content content : arrayList) {
+			Location locationB = new Location("Content Location");
+			com.atwame.model.Location location = content.getLocation();
+			locationB.setLatitude(Double.parseDouble(location.getLatitude()));
+			locationB.setLongitude(Double.parseDouble(location.getLongitude()));
+			Log.w("Content Location", "" + Double.parseDouble(location.getLatitude()) +" "+ Double.parseDouble(location.getLongitude()));
+			Log.w("Result Location", "" + locationA.distanceTo(locationB));
+			boolean result = locationA.distanceTo(locationB) <= distance ? true:false;
+			Log.w("Result", "" + result);
+			if(result){
+				array.add(content);
+			}
+		}
+		return array;
+	}
 
 	private void displayContent() {
 		ContentDao contentDao = ModelFactory.getInstance(HomeActivity.this)
 				.getDaoSession().getContentDao();
 		arrayList = (ArrayList<Content>) contentDao.loadAll();
+		
 		Collections.sort(arrayList, comparator);
 
 		SharedPreferences sp = getSharedPreferences("atwameprefs", 0);
 		long userID = sp.getLong("currentLoginUserID", -1);
-		listView.setAdapter(new HomeListAdapter(this, arrayList, userID));
+		listView.setAdapter(new HomeListAdapter(this, calculateDistance(arrayList), userID));
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -92,9 +113,10 @@ public class HomeActivity extends SherlockActivity implements
 						PostDetailActivity.class);
 				intent.putExtra("contentID", content.getId());
 				startActivity(intent);
-
+				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			}
 		});
+		
 	}
 
 	Comparator<Content> comparator = new Comparator<Content>() {
@@ -145,7 +167,7 @@ public class HomeActivity extends SherlockActivity implements
 
 		@Override
 		public void loadResponse(String event, Object response) {
-			if (event.equals(ParserEvent.CONTENT_HOME)) {
+			if (event.equals(ParserEvent.SHARE_CONTENT)) {
 				loadShareContentResponse(stopService);
 				displayContent();
 			}

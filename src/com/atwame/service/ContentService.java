@@ -3,23 +3,19 @@ package com.atwame.service;
 import java.io.IOException;
 import java.util.HashMap;
 
-import com.atwame.model.Attachment;
+import android.content.Context;
+import android.util.Log;
+
 import com.atwame.model.Content;
 import com.atwame.model.ContentDao;
 import com.atwame.model.Location;
 import com.atwame.model.User;
 import com.atwame.model.UserDao;
 import com.atwame.parser.ContentParser;
-import com.atwame.parser.UserParser;
-import com.atwame.service.BaseService.ParserExc;
-import com.atwame.utils.CategoryEnum;
-import com.atwame.utils.ServerCom.iAsyncTerminatorCallback;
 import com.atwame.utils.ModelFactory;
 import com.atwame.utils.ParserEvent;
+import com.atwame.utils.ServerCom.iAsyncTerminatorCallback;
 import com.atwame.utils.WebService;
-
-import android.content.Context;
-import android.util.Log;
 
 public class ContentService extends BaseService {
 

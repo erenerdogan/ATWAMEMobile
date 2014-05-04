@@ -12,7 +12,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -73,11 +72,11 @@
                     android:layout_height="60dp"
                     android:layout_marginBottom="10dip"
                     android:layout_marginTop="5dip"
-                    android:layout_toLeftOf="@+id/DetailcommentimageView1"
+                    android:layout_toLeftOf="@+id/DetailCommentImageButton"
                     android:singleLine="false" />
 
-                <ImageView
-                    android:id="@+id/DetailcommentimageView1"
+                <ImageButton
+                    android:id="@+id/DetailCommentImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -88,24 +87,29 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
+                android:layout_height="match_parent" >
 
                 <ListView
                     android:id="@+id/commentlist"
                     android:layout_width="fill_parent"
-                    android:layout_height="313dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="#E6E6E6"
+                    android:layout_height="match_parent"
                     android:drawSelectorOnTop="false"
                     android:scrollbarAlwaysDrawVerticalTrack="true" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
+	<!-- Footer aligned to bottom -->
 
+    <RelativeLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="-54dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="top" >
+    </RelativeLayout>
 </RelativeLayout>

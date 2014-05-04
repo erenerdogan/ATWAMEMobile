@@ -72,7 +72,7 @@ public class ShareService extends BaseService {
 		if (loadingAlert != null)
 			loadingAlert.dismiss();
 		if (loadResponder != null)
-			loadResponder.loadResponse(ParserEvent.CONTENT_HOME, null);// Home
+			loadResponder.loadResponse(ParserEvent.SHARE_CONTENT, null);// Home
 																		// Activity'e
 																		// gonderildi.
 	}

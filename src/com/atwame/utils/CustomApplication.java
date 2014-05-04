@@ -23,8 +23,9 @@ public class CustomApplication extends Application{
 	public static int LATEST_VERSION = CURRENT_VERSION;
 	private User currentUser;
 	private String registrationID;
-	private double posLong = 145.072842;
-	private double posLat = -37.684998; 
+	public double distance = 50; 
+	private double posLong = 40.808186;
+	private double posLat = 29.353902; 
 	private LocationManager locationManager;
 	private Boolean gpsDisabled = false;
 	private WebService WebserviceInstance;

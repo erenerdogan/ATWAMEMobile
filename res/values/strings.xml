@@ -4,15 +4,15 @@
     <string name="app_name">ATWAME Mobile</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_home">Home</string>
 
     <color name="almostBlack">#1c1c1c</color>
     <color name="white">#ffffff</color>
 
-    <string name="title_activity_register">RegisterActivity</string>
-    <string name="title_activity_wall_me">WallMeActivity</string>
-    <string name="title_activity_settings">SettingsActivity</string>
-    <string name="title_activity_post_detail">PostDetailActivity</string>
+    <string name="title_activity_register">Register</string>
+    <string name="title_activity_wall_me">Wall Me</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_post_detail">Post Detail</string>
     
 
 </resources>

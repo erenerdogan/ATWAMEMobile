@@ -21,8 +21,8 @@ import com.atwame.utils.WebService;
 import android.content.Context;
 import android.util.Log;
 
-public class ContentService extends BaseService{
-	
+public class ContentService extends BaseService {
+
 	public ContentService(Context context,
 			iAsyncTerminatorCallback loadResponder) {
 		super(context, loadResponder);
@@ -38,19 +38,34 @@ public class ContentService extends BaseService{
 	@Override
 	protected void parseJSON(String json) throws ParserExc {
 		myParser.parseJSON(json);
-		ContentDao contentDao = ModelFactory.getInstance().getDaoSession().getContentDao();
-		contentDao.insertOrReplaceInTx(((ContentParser)myParser).contentList);
-		for (Content c : ((ContentParser)myParser).contentList) {
-			User user = c.getUser();
-			UserDao userDao = ModelFactory.getInstance().getDaoSession().getUserDao();
-			User u = userDao.load(user.getId());
-			if(u == null){
-				userDao.insert(user);
+
+		for (Content c : ((ContentParser) myParser).contentList) {
+
+			ContentDao contentDao = ModelFactory.getInstance().getDaoSession()
+					.getContentDao();
+			Content content = contentDao.load(c.getId());
+			
+			if (content == null) {
+				Log.w("Content parseJSON"," Eklendi.");
+				User user = c.getUser();
+				UserDao userDao = ModelFactory.getInstance().getDaoSession()
+						.getUserDao();
+				User u = userDao.load(user.getId());
+				if (u == null) {
+					userDao.insert(user);
+				}
+				/*
+				 * Attachment attachment = c.getAttachment();
+				 * ModelFactory.getInstance
+				 * ().getDaoSession().getAttachmentDao().
+				 * insertOrReplace(attachment);
+				 */
+				Location location = c.getLocation();
+				ModelFactory.getInstance().getDaoSession().getLocationDao()
+						.insertOrReplace(location);
+				
+				contentDao.insert(c);
 			}
-			/*Attachment attachment = c.getAttachment();
-			ModelFactory.getInstance().getDaoSession().getAttachmentDao().insertOrReplace(attachment);*/
-			Location location = c.getLocation();
-			ModelFactory.getInstance().getDaoSession().getLocationDao().insertOrReplace(location);
 		}
 		Log.w("Contents DB", "Contents DB ye Eklendi.");
 	}
@@ -60,8 +75,9 @@ public class ContentService extends BaseService{
 		if (loadingAlert != null)
 			loadingAlert.dismiss();
 		if (loadResponder != null)
-			loadResponder.loadResponse(ParserEvent.CONTENT_HOME,null);// Home Activity'e gonderildi.
+			loadResponder.loadResponse(ParserEvent.CONTENT_HOME, null);// Home
+																		// Activity'e
+																		// gonderildi.
 	}
-	
-	
+
 }

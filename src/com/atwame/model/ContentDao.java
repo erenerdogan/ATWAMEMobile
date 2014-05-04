@@ -35,8 +35,9 @@ public class ContentDao extends AbstractDao<Content, Long> {
         public final static Property Category_id = new Property(4, Long.class, "category_id", false, "CATEGORY_ID");
         public final static Property Attachment_id = new Property(5, Long.class, "attachment_id", false, "ATTACHMENT_ID");
         public final static Property Location_id = new Property(6, Long.class, "location_id", false, "LOCATION_ID");
-        public final static Property Created_at = new Property(7, java.util.Date.class, "created_at", false, "CREATED_AT");
-        public final static Property Upload_at = new Property(8, java.util.Date.class, "upload_at", false, "UPLOAD_AT");
+        public final static Property Like = new Property(7, Boolean.class, "like", false, "LIKE");
+        public final static Property Created_at = new Property(8, java.util.Date.class, "created_at", false, "CREATED_AT");
+        public final static Property Upload_at = new Property(9, java.util.Date.class, "upload_at", false, "UPLOAD_AT");
     };
 
     private DaoSession daoSession;
@@ -66,8 +67,9 @@ public class ContentDao extends AbstractDao<Content, Long> {
                 "'CATEGORY_ID' INTEGER," + // 4: category_id
                 "'ATTACHMENT_ID' INTEGER," + // 5: attachment_id
                 "'LOCATION_ID' INTEGER," + // 6: location_id
-                "'CREATED_AT' INTEGER," + // 7: created_at
-                "'UPLOAD_AT' INTEGER);"); // 8: upload_at
+                "'LIKE' INTEGER," + // 7: like
+                "'CREATED_AT' INTEGER," + // 8: created_at
+                "'UPLOAD_AT' INTEGER);"); // 9: upload_at
     }
 
     /** Drops the underlying database table. */
@@ -116,14 +118,19 @@ public class ContentDao extends AbstractDao<Content, Long> {
             stmt.bindLong(7, location_id);
         }
  
+        Boolean like = entity.getLike();
+        if (like != null) {
+            stmt.bindLong(8, like ? 1l: 0l);
+        }
+ 
         java.util.Date created_at = entity.getCreated_at();
         if (created_at != null) {
-            stmt.bindLong(8, created_at.getTime());
+            stmt.bindLong(9, created_at.getTime());
         }
  
         java.util.Date upload_at = entity.getUpload_at();
         if (upload_at != null) {
-            stmt.bindLong(9, upload_at.getTime());
+            stmt.bindLong(10, upload_at.getTime());
         }
     }
 
@@ -150,8 +157,9 @@ public class ContentDao extends AbstractDao<Content, Long> {
             cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4), // category_id
             cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5), // attachment_id
             cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6), // location_id
-            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // created_at
-            cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)) // upload_at
+            cursor.isNull(offset + 7) ? null : cursor.getShort(offset + 7) != 0, // like
+            cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)), // created_at
+            cursor.isNull(offset + 9) ? null : new java.util.Date(cursor.getLong(offset + 9)) // upload_at
         );
         return entity;
     }
@@ -166,8 +174,9 @@ public class ContentDao extends AbstractDao<Content, Long> {
         entity.setCategory_id(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
         entity.setAttachment_id(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
         entity.setLocation_id(cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6));
-        entity.setCreated_at(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
-        entity.setUpload_at(cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)));
+        entity.setLike(cursor.isNull(offset + 7) ? null : cursor.getShort(offset + 7) != 0);
+        entity.setCreated_at(cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)));
+        entity.setUpload_at(cursor.isNull(offset + 9) ? null : new java.util.Date(cursor.getLong(offset + 9)));
      }
     
     /** @inheritdoc */

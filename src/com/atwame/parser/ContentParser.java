@@ -46,14 +46,14 @@ public class ContentParser extends BaseParser {
 				user.setId(objUser.getLong("id"));
 				user.setName(objUser.getString("name"));
 				user.setPicture(objUser.getString("picture"));
-				Log.w("objUser",""+user.getName());
+				
 				
 				JSONObject objLocation = obj.getJSONObject("location");
 				Location location = new Location();
 				location.setId(objLocation.getLong("id"));
 				location.setLatitude(objLocation.getString("latitude"));
 				location.setLongitude(objLocation.getString("longitude"));
-				Log.w("objLocation",""+location.getLatitude()+ " " + location.getLongitude());
+				
 				/*
 				JSONObject objAttachment = obj.getJSONObject("attachment");
 				Attachment attachment = new Attachment();
@@ -69,7 +69,8 @@ public class ContentParser extends BaseParser {
 				//content.setAttachment(attachment);
 				content.setUser(user);
 				content.setLocation(location);
-				Log.w("objContent",""+content.getDescription());
+				content.setLike(false);
+				
 				
 				contentList.add(content);
 			}

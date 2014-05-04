@@ -20,6 +20,7 @@ public class Content {
     private Long category_id;
     private Long attachment_id;
     private Long location_id;
+    private Boolean like;
     private java.util.Date created_at;
     private java.util.Date upload_at;
 
@@ -53,7 +54,7 @@ public class Content {
         this.id = id;
     }
 
-    public Content(Long id, String title, String description, Long user_id, Long category_id, Long attachment_id, Long location_id, java.util.Date created_at, java.util.Date upload_at) {
+    public Content(Long id, String title, String description, Long user_id, Long category_id, Long attachment_id, Long location_id, Boolean like, java.util.Date created_at, java.util.Date upload_at) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -61,6 +62,7 @@ public class Content {
         this.category_id = category_id;
         this.attachment_id = attachment_id;
         this.location_id = location_id;
+        this.like = like;
         this.created_at = created_at;
         this.upload_at = upload_at;
     }
@@ -125,6 +127,14 @@ public class Content {
 
     public void setLocation_id(Long location_id) {
         this.location_id = location_id;
+    }
+
+    public Boolean getLike() {
+        return like;
+    }
+
+    public void setLike(Boolean like) {
+        this.like = like;
     }
 
     public java.util.Date getCreated_at() {

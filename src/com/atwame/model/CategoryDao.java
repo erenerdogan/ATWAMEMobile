@@ -25,8 +25,9 @@ public class CategoryDao extends AbstractDao<Category, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "ID");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Created_at = new Property(2, java.util.Date.class, "created_at", false, "CREATED_AT");
-        public final static Property Updated_at = new Property(3, java.util.Date.class, "updated_at", false, "UPDATED_AT");
+        public final static Property Member = new Property(2, Boolean.class, "member", false, "MEMBER");
+        public final static Property Created_at = new Property(3, java.util.Date.class, "created_at", false, "CREATED_AT");
+        public final static Property Updated_at = new Property(4, java.util.Date.class, "updated_at", false, "UPDATED_AT");
     };
 
     private DaoSession daoSession;
@@ -47,8 +48,9 @@ public class CategoryDao extends AbstractDao<Category, Long> {
         db.execSQL("CREATE TABLE " + constraint + "'CATEGORY' (" + //
                 "'ID' INTEGER PRIMARY KEY ," + // 0: id
                 "'NAME' TEXT," + // 1: name
-                "'CREATED_AT' INTEGER," + // 2: created_at
-                "'UPDATED_AT' INTEGER);"); // 3: updated_at
+                "'MEMBER' INTEGER," + // 2: member
+                "'CREATED_AT' INTEGER," + // 3: created_at
+                "'UPDATED_AT' INTEGER);"); // 4: updated_at
     }
 
     /** Drops the underlying database table. */
@@ -72,14 +74,19 @@ public class CategoryDao extends AbstractDao<Category, Long> {
             stmt.bindString(2, name);
         }
  
+        Boolean member = entity.getMember();
+        if (member != null) {
+            stmt.bindLong(3, member ? 1l: 0l);
+        }
+ 
         java.util.Date created_at = entity.getCreated_at();
         if (created_at != null) {
-            stmt.bindLong(3, created_at.getTime());
+            stmt.bindLong(4, created_at.getTime());
         }
  
         java.util.Date updated_at = entity.getUpdated_at();
         if (updated_at != null) {
-            stmt.bindLong(4, updated_at.getTime());
+            stmt.bindLong(5, updated_at.getTime());
         }
     }
 
@@ -101,8 +108,9 @@ public class CategoryDao extends AbstractDao<Category, Long> {
         Category entity = new Category( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)), // created_at
-            cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)) // updated_at
+            cursor.isNull(offset + 2) ? null : cursor.getShort(offset + 2) != 0, // member
+            cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)), // created_at
+            cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)) // updated_at
         );
         return entity;
     }
@@ -112,8 +120,9 @@ public class CategoryDao extends AbstractDao<Category, Long> {
     public void readEntity(Cursor cursor, Category entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setCreated_at(cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)));
-        entity.setUpdated_at(cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)));
+        entity.setMember(cursor.isNull(offset + 2) ? null : cursor.getShort(offset + 2) != 0);
+        entity.setCreated_at(cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)));
+        entity.setUpdated_at(cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)));
      }
     
     /** @inheritdoc */

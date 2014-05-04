@@ -15,6 +15,7 @@ public class Category {
 
     private Long id;
     private String name;
+    private Boolean member;
     private java.util.Date created_at;
     private java.util.Date updated_at;
 
@@ -36,9 +37,10 @@ public class Category {
         this.id = id;
     }
 
-    public Category(Long id, String name, java.util.Date created_at, java.util.Date updated_at) {
+    public Category(Long id, String name, Boolean member, java.util.Date created_at, java.util.Date updated_at) {
         this.id = id;
         this.name = name;
+        this.member = member;
         this.created_at = created_at;
         this.updated_at = updated_at;
     }
@@ -63,6 +65,14 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getMember() {
+        return member;
+    }
+
+    public void setMember(Boolean member) {
+        this.member = member;
     }
 
     public java.util.Date getCreated_at() {

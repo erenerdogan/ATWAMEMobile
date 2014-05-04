@@ -15,11 +15,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -70,8 +73,28 @@ public class HomeActivity extends SherlockActivity implements
 				.getDaoSession().getContentDao();
 		arrayList = (ArrayList<Content>) contentDao.loadAll();
 		Collections.sort(arrayList, comparator);
-		listView.setAdapter(new HomeListAdapter(this, arrayList));
-		listView.postInvalidate();
+
+		SharedPreferences sp = getSharedPreferences("atwameprefs", 0);
+		long userID = sp.getLong("currentLoginUserID", -1);
+		listView.setAdapter(new HomeListAdapter(this, arrayList, userID));
+
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// Toast.makeText(getApplicationContext(),
+				// "Butona Tiklandi", Toast.LENGTH_LONG).show();
+				Content content = (Content) listView
+						.getItemAtPosition(position);
+
+				Intent intent = new Intent(HomeActivity.this,
+						PostDetailActivity.class);
+				intent.putExtra("contentID", content.getId());
+				startActivity(intent);
+
+			}
+		});
 	}
 
 	Comparator<Content> comparator = new Comparator<Content>() {
@@ -134,11 +157,14 @@ public class HomeActivity extends SherlockActivity implements
 		if (stopService || flag == 1) {
 
 			flag = 0;
-			
+
 			SharedPreferences sp = getSharedPreferences("atwameprefs", 0);
 			long userID = sp.getLong("currentLoginUserID", -1);
-			new ShareService(context, new loadShareContents(false),messageTxt.getText().toString(),userID,((CategoryEnum)categorySpinner.getSelectedItem()).getValue()).exec()
-					.makeStandardProgressBox("Share Message...");
+			new ShareService(context, new loadShareContents(false), messageTxt
+					.getText().toString(), userID,
+					((CategoryEnum) categorySpinner.getSelectedItem())
+							.getValue()).exec().makeStandardProgressBox(
+					"Share Message...");
 			Log.w("Location", "" + application.getPosLatAsString() + " "
 					+ application.getPosLongAsString());
 		}
@@ -214,11 +240,10 @@ public class HomeActivity extends SherlockActivity implements
 			categorySpinner = (Spinner) v.findViewById(R.id.customCategory);
 
 			CategoryEnum[] arr = { CategoryEnum.GENEL, CategoryEnum.DUYURU,
-					CategoryEnum.EGLENCE, CategoryEnum.HABER, CategoryEnum.KISISEL,
-					CategoryEnum.REKLAM };
+					CategoryEnum.EGLENCE, CategoryEnum.HABER,
+					CategoryEnum.KISISEL, CategoryEnum.REKLAM };
 			ArrayAdapter<CategoryEnum> adapter = new ArrayAdapter<CategoryEnum>(
-					HomeActivity.this, R.layout.simple_spinner_item,
-					arr);
+					HomeActivity.this, R.layout.simple_spinner_item, arr);
 			categorySpinner.setAdapter(adapter);
 
 			myAlert.show();
@@ -241,8 +266,12 @@ public class HomeActivity extends SherlockActivity implements
 
 				if (myAlert.isShowing())
 					return;
-				
-				Log.w("SHARE", messageTxt.getText().toString() + " " + ((CategoryEnum)categorySpinner.getSelectedItem()).getValue());
+
+				Log.w("SHARE",
+						messageTxt.getText().toString()
+								+ " "
+								+ ((CategoryEnum) categorySpinner
+										.getSelectedItem()).getValue());
 				loadShareContentResponse(true);
 				dialog.dismiss();
 			}

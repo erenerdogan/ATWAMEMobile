@@ -56,7 +56,7 @@ public class WallMeActivity extends SherlockActivity implements NavHome.iHomeNav
 		arrayList = (ArrayList<Content>) u.getContents();
 		Collections.sort(arrayList, comparator);
 		
-		listView.setAdapter(new HomeListAdapter(this, arrayList));
+		listView.setAdapter(new HomeListAdapter(this, arrayList,userID));
 		listView.postInvalidate();
 	}
 	

@@ -3,6 +3,7 @@ package com.atwame;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -26,6 +27,8 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
+import com.atwame.model.Category;
+import com.atwame.model.CategoryDao;
 import com.atwame.model.Content;
 import com.atwame.model.ContentDao;
 import com.atwame.service.ContentService;
@@ -54,7 +57,7 @@ public class HomeActivity extends SherlockActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-		
+
 		listView = (ListView) findViewById(R.id.homeListView);
 		flag = 1;
 		application = (CustomApplication) getApplication();
@@ -62,8 +65,32 @@ public class HomeActivity extends SherlockActivity implements
 		NavHome.spawn(this, this);
 		inflater = this.getLayoutInflater();
 		displayContent();
+		settingCategory();
 	}
-	private ArrayList<Content> calculateDistance(ArrayList<Content> arrayList){
+
+	private void settingCategory() {
+		CategoryDao categoryDao = ModelFactory.getInstance(HomeActivity.this)
+				.getDaoSession().getCategoryDao();
+		int size = categoryDao.loadAll().size();
+		Log.w("Category Size", "" + size);
+		CategoryEnum[] eNum = CategoryEnum.values();
+		for (int i = 0; i < eNum.length; i++) {
+			CategoryEnum cEnum = eNum[i];
+			Log.w("cEnum", "" + cEnum);
+			Category c = categoryDao.load((long) cEnum.getValue());
+			if (c == null) {
+				c = new Category();
+				c.setId((long) cEnum.getValue());
+				c.setMember(true);
+				c.setName(cEnum.toString());
+				categoryDao.insertOrReplace(c);
+				Log.w("Category Enum", "" + c.getId() + " " + c.getName() + " "
+						+ c.getMember());
+			}
+		}
+	}
+
+	private ArrayList<Content> calculateDistance(ArrayList<Content> arrayList) {
 		ArrayList<Content> array = new ArrayList<Content>();
 		double lat = application.getPosLati();
 		double lng = application.getPosLong();
@@ -71,18 +98,24 @@ public class HomeActivity extends SherlockActivity implements
 		Location locationA = new Location("myLocation");
 		locationA.setLatitude(lat);
 		locationA.setLongitude(lng);
-		Log.w("MyLocation","" + lat + " " + lng);
+		Log.w("MyLocation", "" + lat + " " + lng);
 		for (Content content : arrayList) {
 			Location locationB = new Location("Content Location");
 			com.atwame.model.Location location = content.getLocation();
+			Log.w("Content ID", "" + content.getId());
 			locationB.setLatitude(Double.parseDouble(location.getLatitude()));
 			locationB.setLongitude(Double.parseDouble(location.getLongitude()));
-			Log.w("Content Location", "" + Double.parseDouble(location.getLatitude()) +" "+ Double.parseDouble(location.getLongitude()));
+			Log.w("Content Location",
+					"" + Double.parseDouble(location.getLatitude()) + " "
+							+ Double.parseDouble(location.getLongitude()));
 			Log.w("Result Location", "" + locationA.distanceTo(locationB));
-			boolean result = locationA.distanceTo(locationB) <= distance ? true:false;
+			boolean result = locationA.distanceTo(locationB) <= distance ? true
+					: false;
 			Log.w("Result", "" + result);
-			if(result){
-				array.add(content);
+			if (result) {
+				if (content.getCategory().getMember() == true) {
+					array.add(content);
+				}
 			}
 		}
 		return array;
@@ -92,12 +125,13 @@ public class HomeActivity extends SherlockActivity implements
 		ContentDao contentDao = ModelFactory.getInstance(HomeActivity.this)
 				.getDaoSession().getContentDao();
 		arrayList = (ArrayList<Content>) contentDao.loadAll();
-		
+
 		Collections.sort(arrayList, comparator);
 
 		SharedPreferences sp = getSharedPreferences("atwameprefs", 0);
 		long userID = sp.getLong("currentLoginUserID", -1);
-		listView.setAdapter(new HomeListAdapter(this, calculateDistance(arrayList), userID));
+		listView.setAdapter(new HomeListAdapter(this,
+				calculateDistance(arrayList), userID));
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -113,10 +147,11 @@ public class HomeActivity extends SherlockActivity implements
 						PostDetailActivity.class);
 				intent.putExtra("contentID", content.getId());
 				startActivity(intent);
-				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+				overridePendingTransition(R.anim.push_left_in,
+						R.anim.push_left_out);
 			}
 		});
-		
+
 	}
 
 	Comparator<Content> comparator = new Comparator<Content>() {
@@ -281,6 +316,13 @@ public class HomeActivity extends SherlockActivity implements
 				myAlert.setTitle("Error in input!");
 				if (messageTxt.getText().toString().equalsIgnoreCase("")) {
 					myAlert.setMessage("Message is Empty!!!");
+					myAlert.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
+							new cancelListener());
+					myAlert.show();
+				} else if (application.getPosLatAsString().equals("")
+						|| application.getPosLongAsString().equals("")) {
+					myAlert.setTitle("Location Error!");
+					myAlert.setMessage("GPS Disable. Please GPS open!!!");
 					myAlert.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
 							new cancelListener());
 					myAlert.show();

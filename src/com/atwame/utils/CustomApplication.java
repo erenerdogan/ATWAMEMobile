@@ -131,7 +131,7 @@ public class CustomApplication extends Application{
             @Override
             public void onProviderEnabled(String provider) {
             	gpsDisabled = false;
-           		//Toast.makeText( getApplicationContext(), "Gps Enabled", Toast.LENGTH_SHORT).show();
+           		Toast.makeText( getApplicationContext(), "Gps Enabled", Toast.LENGTH_SHORT).show();
             }
 
             @Override

@@ -18,6 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 import com.atwame.model.Comment;
 import com.atwame.model.CommentDao;
 import com.atwame.model.Content;
@@ -182,6 +185,53 @@ public class PostDetailActivity extends SherlockActivity implements
 
 		}
 	}
+	
+	/*
+	 * 
+	 * SherlockActivity BEGIN
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		onPrepareOptionsMenu(menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.clear();
+		SubMenu myMenuBack = menu.addSubMenu("Back");
+		MenuItem myMenuItemBack = myMenuBack.getItem();
+		myMenuItemBack.setOnMenuItemClickListener(new backHandler());// new clickBackHandler());
+		myMenuItemBack.setTitle("Back");
+		myMenuItemBack.setTitleCondensed("Back");
+		myMenuItemBack.setIcon(R.drawable.ic_menu_back);
+		myMenuItemBack.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
+				| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		//SubMenu myMenu = menu.addSubMenu("Share");
+		//MenuItem myMenuItem = myMenu.getItem();
+		// myMenuItem.setOnMenuItemClickListener(new clickRefreshHandler());
+		//myMenuItem.setTitle("Share");
+		//myMenuItem.setTitleCondensed("Share");
+		//myMenuItem.setIcon(R.drawable.ic_menu_edit);
+		//myMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
+		//		| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	private class backHandler implements
+			com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener {
+		@Override
+		public boolean onMenuItemClick(MenuItem item) {
+			onBackPressed();
+			return false;
+		}
+	}
+
+
+	/*
+	 * SherlockActivity END
+	 */
+	
+	
 	
 	@Override
 	public void onBackPressed() {
